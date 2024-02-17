@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# To enable zsh, please set ENABLE_ZSH env var to "true" before launching vagrant up 
+#   + On windows => $env:ENABLE_ZSH="true"
+#   + On Linux  => export ENABLE_ZSH="true"
+
+# Définition de la configuration Vagrant avec la version 2 de la syntaxe
+Vagrant.configure("2") do |config|
+  # Définition d'une machine virtuelle nommée "preprod"
+  config.vm.define "preprod" do |preprod|
+    # Configuration de la box à utiliser pour la VM
+    preprod.vm.box = "ubuntu/bionic64"
+    # Configuration d'un réseau privé de type DHCP pour la VM
+    preprod.vm.network "private_network", type: "dhcp"
+    # Définition du nom d'hôte de la VM
+    preprod.vm.hostname = "preprod"
+    # Configuration du fournisseur de la VM, ici VirtualBox, avec des paramètres spécifiques
+    preprod.vm.provider "virtualbox" do |v|
+      v.name = "preprod" # Nom de la VM dans VirtualBox
+      v.memory = 1024   # Quantité de mémoire allouée à la VM
+      v.cpus = 2        # Nombre de CPU alloués à la VM
+    end
+    # Provisionnement de la VM avec un script shell
+    preprod.vm.provision :shell do |shell|
+      shell.path = "install_docker.sh" # Chemin vers le script d'installation de Docker
+      shell.env = { 'ENABLE_ZSH' => true } # Passage de l'environnement variable ENABLE_ZSH au script
+    end
+  end
+end
+
+# preprod: Pour cette stack, vous utiliserez 192.168.56.8 Adresse IP
