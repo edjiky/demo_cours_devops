@@ -19,4 +19,6 @@ jobs:
 
     - name: Vérification de conformité PEP8
       run: python3 -m pip install flake8
+    
+    - name: Analyse du code avec flake8
       run: flake8
